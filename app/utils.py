@@ -27,7 +27,7 @@ def encode_response(response: HttpResponse) -> bytes:
     """
     Encode the HTTP response to bytes.
     """
-    status_line = f"HTTP/1.1 {response.status_code} OK\r\n"
+    status_line = f"HTTP/1.1 {response.status_code} {response.status_text}\r\n"
     headers = "".join([f"{key}: {value}\r\n" for key, value in response.headers.items()])
     body = response.body
     return (status_line + headers + "\r\n" + body).encode()

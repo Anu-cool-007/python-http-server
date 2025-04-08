@@ -13,5 +13,6 @@ class HttpRequest:
 @dataclass
 class HttpResponse:
     status_code: int
+    status_text: str
     headers: dict
     body: str
