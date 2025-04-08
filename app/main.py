@@ -1,43 +1,6 @@
 import socket
 
-from dataclasses import dataclass
-
-
-@dataclass
-class HttpRequest:
-    method: str
-    target: str
-    http_version: dict
-    body: str
-    query_params: dict
-
-
-@dataclass
-class HttpResponse:
-    status_code: int
-    headers: dict
-    body: str
-
-
-def decode_request(request: bytes) -> HttpRequest:
-    """
-    Decode the HTTP request to extract the method and path.
-    """
-    request_str = request.decode()
-    lines = request_str.split("\r\n")
-    method, path, http_version = lines[0].split(" ")
-    headers = {}
-    for header in lines[1:-2]:
-        key, value = header.split(": ")
-        headers[key] = value
-
-    return HttpRequest(
-        method=method,
-        target=path,
-        http_version=http_version,
-        body=lines[-1],
-        query_params={},
-    )
+from app.utils import decode_request, encode_response, handle_request
 
 
 def main():
@@ -53,10 +16,9 @@ def main():
         data = connection.recv(1024)
         request = decode_request(data)
 
-        if request.target == "/":
-            connection.sendall(b"HTTP/1.1 200 OK\r\n\r\n")
-        else:
-            connection.sendall(b"HTTP/1.1 404 Not Found\r\n\r\n")
+        response = handle_request(request)
+
+        connection.sendall(encode_response(response))
 
 
 if __name__ == "__main__":
