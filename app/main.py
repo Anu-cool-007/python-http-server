@@ -1,8 +1,43 @@
 import socket
 
-from app.utils import decode_request  # noqa: F401
+from dataclasses import dataclass
 
 
+@dataclass
+class HttpRequest:
+    method: str
+    target: str
+    http_version: dict
+    body: str
+    query_params: dict
+
+
+@dataclass
+class HttpResponse:
+    status_code: int
+    headers: dict
+    body: str
+
+
+def decode_request(request: bytes) -> HttpRequest:
+    """
+    Decode the HTTP request to extract the method and path.
+    """
+    request_str = request.decode()
+    lines = request_str.split("\r\n")
+    method, path, http_version = lines[0].split(" ")
+    headers = {}
+    for header in lines[1:-2]:
+        key, value = header.split(": ")
+        headers[key] = value
+
+    return HttpRequest(
+        method=method,
+        target=path,
+        http_version=http_version,
+        body=lines[-1],
+        query_params={},
+    )
 
 
 def main():
