@@ -20,11 +20,12 @@ def handle_request(request: HttpRequest) -> HttpResponse:
                 body=f"{name}",
             )
         case ["user-agent"]:
+            user_agent = request.headers['User-Agent']
             return HttpResponse(
                 status_code=200,
                 status_text="OK",
-                headers={"Content-Type": "text/plain"},
-                body=f"{request.headers['User-Agent']}",
+                headers={"Content-Type": "text/plain", "Content-Length": str(len(user_agent))},
+                body=f"{user_agent}",
             )
         case _:
             return HttpResponse(
