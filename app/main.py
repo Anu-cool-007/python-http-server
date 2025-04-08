@@ -1,4 +1,8 @@
-import socket  # noqa: F401
+import socket
+
+from app.utils import decode_request  # noqa: F401
+
+
 
 
 def main():
@@ -11,7 +15,13 @@ def main():
         connection, address = server_socket.accept()
         print(address)
 
-        connection.sendall(b"HTTP/1.1 200 OK\r\n\r\n")
+        data = connection.recv(1024)
+        request = decode_request(data)
+
+        if request.target == "/":
+            connection.sendall(b"HTTP/1.1 200 OK\r\n\r\n")
+        else:
+            connection.sendall(b"HTTP/1.1 404 Not Found\r\n\r\n")
 
 
 if __name__ == "__main__":
