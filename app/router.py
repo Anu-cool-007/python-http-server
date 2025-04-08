@@ -3,7 +3,6 @@ from app.models import HttpRequest, HttpResponse
 
 
 def handle_request(request: HttpRequest) -> HttpResponse:
-    
 
     match request.target.split("/")[1:]:
         case [""]:

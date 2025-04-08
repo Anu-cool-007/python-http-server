@@ -18,6 +18,7 @@ def decode_request(request: bytes) -> HttpRequest:
         method=method,
         target=path,
         http_version=http_version,
+        headers=headers,
         body=lines[-1],
         query_params={},
     )

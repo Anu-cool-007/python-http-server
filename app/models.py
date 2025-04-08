@@ -6,6 +6,7 @@ class HttpRequest:
     method: str
     target: str
     http_version: dict
+    headers: dict
     body: str
     query_params: dict
 
