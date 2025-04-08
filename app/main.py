@@ -1,6 +1,7 @@
 import socket
 
-from app.utils import decode_request, encode_response, handle_request
+from app.router import handle_request
+from app.utils import decode_request, encode_response
 
 
 def main():
