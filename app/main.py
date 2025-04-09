@@ -15,7 +15,7 @@ def handler(client_socket: Socket, args: Namespace):
         data = client_socket.recv(1024)
         request = decode_request(data)
 
-        encoding = request.headers.get("Accept-Encoding")
+        encoding = request.headers.get("Accept-Encoding", "").split(", ")
 
         response = handle_request(request, args)
 

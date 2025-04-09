@@ -26,12 +26,12 @@ def decode_request(request: bytes) -> HttpRequest:
     )
 
 
-def encode_response(response: HttpResponse, encoding: str) -> bytes:
+def encode_response(response: HttpResponse, encodings: [str]) -> bytes:
     """
     Encode the HTTP response to bytes.
     """
 
-    if encoding == "gzip":
+    if "gzip" in encodings:
         response.body = gzip.compress(response.body.encode())
         response.headers["Content-Encoding"] = "gzip"
         response.headers["Content-Length"] = str(len(response.body))
