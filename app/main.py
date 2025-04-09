@@ -15,13 +15,15 @@ def handler(client_socket: Socket, args: Namespace):
         data = client_socket.recv(1024)
         request = decode_request(data)
 
+        encoding = request.headers.get("Accept-Encoding")
+
         response = handle_request(request, args)
 
         print(f"Request: {request}")
         print(f"Headers: {request.headers}")
         print(f"Body: {request.body}")
         print(f"Response: {response}")
-        client_socket.sendall(encode_response(response))
+        client_socket.sendall(encode_response(response, encoding))
 
 def main():
     # You can use print statements as follows for debugging, they'll be visible when running tests.

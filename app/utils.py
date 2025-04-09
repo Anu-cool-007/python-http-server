@@ -1,3 +1,5 @@
+import gzip
+
 from app.models import HttpRequest, HttpResponse
 
 
@@ -24,10 +26,16 @@ def decode_request(request: bytes) -> HttpRequest:
     )
 
 
-def encode_response(response: HttpResponse) -> bytes:
+def encode_response(response: HttpResponse, encoding: str) -> bytes:
     """
     Encode the HTTP response to bytes.
     """
+
+    if encoding == "gzip":
+        response.body = gzip.compress(response.body.encode())
+        response.headers["Content-Encoding"] = "gzip"
+        response.headers["Content-Length"] = str(len(response.body))
+
     status_line = f"HTTP/1.1 {response.status_code} {response.status_text}\r\n"
     headers = "".join([f"{key}: {value}\r\n" for key, value in response.headers.items()])
     body = response.body
