@@ -32,9 +32,10 @@ def encode_response(response: HttpResponse, encoding: str) -> bytes:
     """
 
     if encoding == "gzip":
-        response.body = gzip.compress(response.body.encode())
+        compressed_response = gzip.compress(response.body.encode())
+        response.body = compressed_response.decode()
         response.headers["Content-Encoding"] = "gzip"
-        response.headers["Content-Length"] = str(len(response.body))
+        response.headers["Content-Length"] = str(len(compressed_response))
 
     status_line = f"HTTP/1.1 {response.status_code} {response.status_text}\r\n"
     headers = "".join([f"{key}: {value}\r\n" for key, value in response.headers.items()])
