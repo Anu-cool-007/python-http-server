@@ -53,6 +53,15 @@ def handle_request(request: HttpRequest, args: Namespace) -> HttpResponse:
                     },
                     body=content.decode(),
                 )
+            elif request.method == "POST":
+                with open(path, "wb") as file:
+                    file.write(request.body.encode())
+                return HttpResponse(
+                    status_code=201,
+                    status_text="Created",
+                    headers={},
+                    body="created",
+                )
             else:
                 return HttpResponse(
                     status_code=404,
